@@ -20,34 +20,38 @@ refs.searchInput.addEventListener('input', debounce(onSearch, DEBOUNCE_DELAY));
 function onSearch(event) {
     event.preventDefault();
     countriesService.searchInput = event.target.value.trim();
-    console.log(event.target.value.trim());
-    
 
     countriesService.fetchCountries().then(data => {
        renderMarkup(data) 
     });
- 
-    
 }
 
 // Функция создающая разметку для  одной страны
 function markupOneCountry(data) {
-    data.forEach(element => {
-            return `<h2>${element.name.official}</h2>`
-        });
-    // const { name, flags, capital, languages, population } = data;
-    
-
+    return data.map(country => {
+        return `<h2>${country.name.official}</h2>
+            <p>Capital: <span>${country.capital}</span></p><p>Population: <span>${country.population }</span></p><p>Languages: <span>${country.languages}</span></p>`
+        }).join('');
 }
+
 // Функция создающая разметку для  2-10 стран
-function markup(data) {
-    const { name, flags, capital, languages, population } = data;
-    return `<li>${name.official}</li>`.join('')
+function markupMoreCountries(data) {
+    return data.map(country => {
+        return `<li class="country-list-item">${country.name.official}</li>`
+    }).join('');
 }
-// Функция, которая рендерит разметку в зависимости от количества полученных стран
 
+// Функция, которая рендерит разметку в зависимости от количества полученных стран
 function renderMarkup(data) {
-    refs.ulList.insertAdjacentHTML('beforeend', markupOneCountry(data))
+    refs.divInfo.innerHTML = '';
+    refs.ulList.innerHTML = '';
+    if (data.length === 1) {
+        refs.divInfo.insertAdjacentHTML('beforeend', markupOneCountry(data)) 
+    } else if (data.length > 1 && data.length <= 10) {
+        refs.ulList.insertAdjacentHTML('beforeend', markupMoreCountries(data))
+    } else if (data.length > 10){
+        Notify.failure('Too many matches found. Please enter a more specific name.')
+    }
 }
 
 
