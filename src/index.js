@@ -19,32 +19,40 @@ refs.searchInput.addEventListener('input', debounce(onSearch, DEBOUNCE_DELAY));
 // Функция для получения текста введенного пользователем в input
 function onSearch(event) {
     event.preventDefault();
+    if (event.target.value.trim() === '') {
+        clearPage();
+        return
+    };
     countriesService.searchInput = event.target.value.trim();
-
     countriesService.fetchCountries().then(data => {
-       renderMarkup(data) 
+        renderMarkup(data) 
     });
-}
+    }
 
 // Функция создающая разметку для  одной страны
 function markupOneCountry(data) {
     return data.map(country => {
-        return `<h2>${country.name.official}</h2>
+        return `<img src="${country.flags.svg}" alt="Flag" width="30" height="24"></img>
+                <h2 class="country-info-title">${country.name.official}</h2>
             <p>Capital: <span>${country.capital}</span></p><p>Population: <span>${country.population }</span></p><p>Languages: <span>${country.languages}</span></p>`
-        }).join('');
+    }).join('');
 }
+
+/* <svg class="country-flags" width="16" height="12">
+                <use href="${country.flags.svg}"></use>
+                </svg> */
+
 
 // Функция создающая разметку для  2-10 стран
 function markupMoreCountries(data) {
     return data.map(country => {
-        return `<li class="country-list-item">${country.name.official}</li>`
+        return `<li class="country-list-item"><img src="${country.flags.svg}" alt="Flag" width="20" height="16"></img>${country.name.official}</li>`
     }).join('');
 }
 
 // Функция, которая рендерит разметку в зависимости от количества полученных стран
 function renderMarkup(data) {
-    refs.divInfo.innerHTML = '';
-    refs.ulList.innerHTML = '';
+    clearPage();
     if (data.length === 1) {
         refs.divInfo.insertAdjacentHTML('beforeend', markupOneCountry(data)) 
     } else if (data.length > 1 && data.length <= 10) {
@@ -52,6 +60,12 @@ function renderMarkup(data) {
     } else if (data.length > 10){
         Notify.failure('Too many matches found. Please enter a more specific name.')
     }
+}
+
+// Функция для очищения разметки
+function clearPage() {
+    refs.divInfo.innerHTML = '';
+    refs.ulList.innerHTML = '';
 }
 
 
