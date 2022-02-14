@@ -12,23 +12,11 @@ class CountriesService {
                 throw new Error(response.status);
             }
             return response.json();
-        }).then(data => { return data }).catch(({ message, error }) => {
+        }).then(data => { return data }).catch(({ message }) => {
             console.log(message);
-            console.log(error);
             Notify.failure('Oops, there is no country with that name')
-            this.handlError
-            // error.forEach(this.handlError);
         })
     }
-    
-    
-    handlError() {
-    
-        Notify.failure('Oops, there is no country with that name')
-    }
 }
-
-
-
 
 export { CountriesService };
