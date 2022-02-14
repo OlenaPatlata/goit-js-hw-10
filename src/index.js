@@ -1,5 +1,5 @@
 import './css/styles.css';
-import CountriesService from './js/country-service';
+import {CountriesService} from './js/fetchCountries';
 import debounce from 'lodash.debounce';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
@@ -34,9 +34,10 @@ function markupOneCountry(data) {
     return data.map(country => {
         return `<img src="${country.flags.svg}" alt="Flag" width="30" height="24"></img>
                 <h2 class="country-info-title">${country.name.official}</h2>
-            <p>Capital: <span>${country.capital}</span></p><p>Population: <span>${country.population }</span></p><p>Languages: <span>${country.languages}</span></p>`
+            <p>Capital: <span>${country.capital}</span></p><p>Population: <span>${country.population }</span></p><p>Languages: <span>${Object.values(country.languages)}</span></p>`
     }).join('');
 }
+
 
 /* <svg class="country-flags" width="16" height="12">
                 <use href="${country.flags.svg}"></use>
@@ -58,7 +59,7 @@ function renderMarkup(data) {
     } else if (data.length > 1 && data.length <= 10) {
         refs.ulList.insertAdjacentHTML('beforeend', markupMoreCountries(data))
     } else if (data.length > 10){
-        Notify.failure('Too many matches found. Please enter a more specific name.')
+        Notify.info('Too many matches found. Please enter a more specific name.')
     }
 }
 
