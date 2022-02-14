@@ -1,5 +1,3 @@
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
-
 class CountriesService {
     constructor() {
         this.searchInput = '';
@@ -12,9 +10,6 @@ class CountriesService {
                 throw new Error(response.status);
             }
             return response.json();
-        }).then(data => { return data }).catch(({ message }) => {
-            console.log(message);
-            Notify.failure('Oops, there is no country with that name')
         })
     }
 }

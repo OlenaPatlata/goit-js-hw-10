@@ -24,10 +24,13 @@ function onSearch(event) {
         return
     };
     countriesService.searchInput = event.target.value.trim();
-    countriesService.fetchCountries().then(data => {
-        renderMarkup(data) 
-    });
-    }
+    countriesService.fetchCountries().then(data => renderMarkup(data)).catch(handleError);
+}
+
+// Функция для сообщения пользователю об ошибке
+const handleError=()=>{
+    Notify.failure('Oops, there is no country with that name')
+}
 
 // Функция создающая разметку для  одной страны
 function markupOneCountry(data) {
@@ -37,12 +40,6 @@ function markupOneCountry(data) {
             <p>Capital: <span>${country.capital}</span></p><p>Population: <span>${country.population }</span></p><p>Languages: <span>${Object.values(country.languages)}</span></p>`
     }).join('');
 }
-
-
-/* <svg class="country-flags" width="16" height="12">
-                <use href="${country.flags.svg}"></use>
-                </svg> */
-
 
 // Функция создающая разметку для  2-10 стран
 function markupMoreCountries(data) {
